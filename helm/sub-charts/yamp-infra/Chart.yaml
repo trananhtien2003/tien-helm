@@ -1,6 +1,6 @@
 apiVersion: v2
-name: gateway-svc
-description: A Helm chart for K8s
+name: yamp-infra
+description: A Helm chart for Kubernetes
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -22,3 +22,14 @@ version: 0.0.1
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "0.0.1"
+dependencies:
+  - name: kafka
+    version: 30.1.4
+    repository: https://charts.bitnami.com/bitnami
+  - name: redis
+    version: 20.1.7
+    repository: https://charts.bitnami.com/bitnami
+  - name: postgresql
+    repository: https://charts.bitnami.com/bitnami
+    version: 16.0.6
+
