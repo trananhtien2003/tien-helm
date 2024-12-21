@@ -39,7 +39,7 @@ jobs:
           context: src
           push: true
           tags: trananhtien/catalog-api:latest
-          file: .src\Services\Catalog\Catalog.API\Dockerfile
+          file: .src/Services/Catalog/Catalog.API/Dockerfile
       # Build and Push Image 3
       - name: Build and Push Image 3
         uses: docker/build-push-action@v3
