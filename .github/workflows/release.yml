@@ -39,7 +39,7 @@ jobs:
           context: src
           push: true
           tags: trananhtien/catalog-api:latest
-          file: .src/Services/Catalog/Catalog.API/Dockerfile
+          file: ./src/Services/Catalog/Catalog.API/Dockerfile
       # Build and Push Image 3
       - name: Build and Push Image 3
         uses: docker/build-push-action@v3
@@ -47,7 +47,7 @@ jobs:
           context: src
           push: true
           tags: trananhtien/shoppingweb:latest
-          file: .src\WebApps\Shopping.Web\Dockerfile
+          file: .\src\WebApps\Shopping.Web\Dockerfile
   update-kubernetes-image:
     runs-on: self-hosted  # Sử dụng self-hosted runner
     needs: build-and-push  # Đảm bảo job này chạy sau khi job build-and-push thành công
