@@ -47,7 +47,7 @@ jobs:
           context: src
           push: true
           tags: trananhtien/shoppingweb:latest
-           file: .src\WebApps\Shopping.Web\Dockerfile
+          file: .src\WebApps\Shopping.Web\Dockerfile
   update-kubernetes-image:
     runs-on: self-hosted  # Sử dụng self-hosted runner
     needs: build-and-push  # Đảm bảo job này chạy sau khi job build-and-push thành công
