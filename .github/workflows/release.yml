@@ -14,7 +14,7 @@ jobs:
 
       - name: Run a simple script
         run: |
-          cd C:\Users\Tien\Downloads\run-aspnetcore-microservices
+          kubectl get all
           echo "Running on $(hostname)"
           dir
       - name: Test a Windows command
