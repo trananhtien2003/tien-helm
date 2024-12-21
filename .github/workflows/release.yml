@@ -31,7 +31,7 @@ jobs:
           context: src  # Đường dẫn đến Dockerfile (thường là thư mục hiện tại)
           push: true  # Đẩy hình ảnh lên Docker Hub
           tags: trananhtien/yarpapigateway:latest  # Đặt tag cho image
-          build-args: 
+          build-args: |
           --no-cache
            file: ./src/ApiGateways/YarpApiGateway/Dockerfile
       # Build and Push Image 2
