@@ -1,0 +1,367 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalogdb
+spec:
+  selector:
+    app: catalogdb
+  ports:
+    - name: postgresql
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: basketdb
+spec:
+  selector:
+    app: basketdb
+  ports:
+    - name: postgresql
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orderdb
+spec:
+  selector:
+    app: orderdb
+  ports:
+    - name: mssql
+      protocol: TCP
+      port: 1433
+      targetPort: 1433
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: messagebroker
+spec:
+  selector:
+    app: messagebroker
+  ports:
+    - name: amqp
+      protocol: TCP
+      port: 5672
+      targetPort: 5672
+    - name: management
+      protocol: TCP
+      port: 15672
+      targetPort: 15672
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yarpapigateway
+  labels:
+    app: yarpapigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yarpapigateway
+  template:
+    metadata:
+      labels:
+        app: yarpapigateway
+    spec:
+      containers:
+        - name: yarpapigateway
+          image: trananhtien/yarpapigateway:2.0
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_HTTP_PORTS
+              value: "80"
+          ports:
+            - containerPort: 80
+              protocol: TCP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yarpapigateway
+spec:
+  selector:
+    app: yarpapigateway
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalogdb
+  template:
+    metadata:
+      labels:
+        app: catalogdb
+    spec:
+      containers:
+        - name: catalogdb
+          image: postgres
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: CatalogDb
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-catalog
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-catalog
+          persistentVolumeClaim:
+            claimName: catalogdb-pvc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basketdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: basketdb
+  template:
+    metadata:
+      labels:
+        app: basketdb
+    spec:
+      containers:
+        - name: basketdb
+          image: postgres
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: BasketDb
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-basket
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-basket
+          persistentVolumeClaim:
+            claimName: basketdb-pvc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orderdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orderdb
+  template:
+    metadata:
+      labels:
+        app: orderdb
+    spec:
+      containers:
+        - name: orderdb
+          image: mcr.microsoft.com/mssql/server:latest
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: SA_PASSWORD
+              value: SwN12345678
+          ports:
+            - containerPort: 1433
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: messagebroker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: messagebroker
+  template:
+    metadata:
+      labels:
+        app: messagebroker
+    spec:
+      containers:
+        - name: messagebroker
+          image: rabbitmq
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: guest
+            - name: RABBITMQ_DEFAULT_PASS
+              value: guest
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog-api
+  template:
+    metadata:
+      labels:
+        app: catalog-api
+    spec:
+      containers:
+        - name: catalog-api
+          image: trananhtien/catalogapi:2.0
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_HTTP_PORTS
+              value: "80"
+            - name: ConnectionStrings__Database
+              value: "Server=catalogdb;Port=5432;Database=CatalogDb;User Id=postgres;Password=postgres;Include Error Detail=true"
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose-windows-amd64 -f docker-compose.yml -f docker-compose.override.yml convert
+    kompose.version: 1.35.0 (9532ceef3)
+  labels:
+    io.kompose.service: catalog-api
+  name: catalog-api
+spec:
+  ports:
+    - name: "6000"
+      port: 6000
+      targetPort: 80
+  selector:
+    io.kompose.service: catalog-api
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basket-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: basket-api
+  template:
+    metadata:
+      labels:
+        app: basket-api
+    spec:
+      containers:
+        - name: basket-api
+          image: trananhtien/basketapi:2.0
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ordering-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ordering-api
+  template:
+    metadata:
+      labels:
+        app: ordering-api
+    spec:
+      containers:
+        - name: ordering-api
+          image: trananhtien/orderingapi:2.0
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_HTTP_PORTS
+              value: "80"
+            - name: ConnectionStrings__Database
+              value: "Server=orderdb;Database=OrderDb;User Id=sa;Password=SwN12345678;Encrypt=False;TrustServerCertificate=True"
+            - name: MessageBroker__Host
+              value: "amqp://ecommerce-mq:5672"
+            - name: MessageBroker__UserName
+              value: "guest"
+            - name: MessageBroker__Password
+              value: "guest"
+          ports:
+            - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopping-web
+  labels:
+    app: shopping-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shopping-web
+  template:
+    metadata:
+      labels:
+        app: shopping-web
+    spec:
+      containers:
+        - name: shopping-web
+          image: trananhtien/shoppingweb:2.0 # Thay bằng tên image của bạn
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_HTTP_PORTS
+              value: "80"
+            - name: ApiSettings__GatewayAddress
+              value: "http:// 10.97.13.123:80"
+          ports:
+            - containerPort: 80
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopping-web
+spec:
+  selector:
+    app: shopping-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP

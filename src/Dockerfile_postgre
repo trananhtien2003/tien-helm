@@ -1,0 +1,10 @@
+# Use the official PostgreSQL image from the Docker registry
+FROM postgres:latest
+
+# Set environment variables
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=postgres
+ENV POSTGRES_DB=CatalogDb
+
+# Expose the PostgreSQL port
+EXPOSE 5432

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose-windows-amd64 -f docker-compose.yml -f docker-compose.override.yml convert
+    kompose.version: 1.35.0 (9532ceef3)
+  labels:
+    io.kompose.service: ordering-api
+  name: ordering-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ordering-api
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose-windows-amd64 -f docker-compose.yml -f docker-compose.override.yml convert
+        kompose.version: 1.35.0 (9532ceef3)
+      labels:
+        io.kompose.service: ordering-api
+    spec:
+      containers:
+        - env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_HTTP_PORTS
+              value: "80"
+            - name: ConnectionStrings__Database
+              value: Server=orderdb;Database=OrderDb;User Id=sa;Password=SwN12345678;Encrypt=False;TrustServerCertificate=True
+            - name: FeatureManagement__OrderFullfilment
+              value: "false"
+            - name: MessageBroker__Host
+              value: amqp://ecommerce-mq:5672
+            - name: MessageBroker__Password
+              value: guest
+            - name: MessageBroker__UserName
+              value: guest
+          image: trananhtien/orderingapi:2.0
+          name: ordering-api
+          ports:
+            - containerPort: 80
+              protocol: TCP
+      restartPolicy: Always

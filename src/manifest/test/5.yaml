@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tutorial
+spec:
+  ports:
+  - name: 80-tcp
+    port: 8387
+    protocol: TCP
+    targetPort: 80
+  selector:
+    com.docker.project: tutorial
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+ 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    com.docker.project: tutorial
+  name: tutorial
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      com.docker.project: tutorial
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        com.docker.project: tutorial
+    spec:
+      containers:
+      - image: trananhtien/shoppingweb:2.0
+        name: tutorial
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        resources: {}
+      restartPolicy: Always
+status: {}
+apiVersion: v1
+kind: Service
+metadata:
+  name: tutorial1
+spec:
+  ports:
+  - name: 80-tcp
+    port: 8388
+    protocol: TCP
+    targetPort: 80
+  selector:
+    com.docker.project: tutorial1
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+ 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    com.docker.project: tutorial1
+  name: tutorial1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      com.docker.project: tutorial1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        com.docker.project: tutorial1
+    spec:
+      containers:
+      - image: trananhtien/yarpapigateway:2.0
+        name: tutorial1
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+ 

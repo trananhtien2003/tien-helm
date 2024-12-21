@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose-windows-amd64 -f docker-compose.yml -f docker-compose.override.yml convert
+    kompose.version: 1.35.0 (9532ceef3)
+  labels:
+    io.kompose.service: catalog-api
+  name: catalog-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: catalog-api
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose-windows-amd64 -f docker-compose.yml -f docker-compose.override.yml convert
+        kompose.version: 1.35.0 (9532ceef3)
+      labels:
+        io.kompose.service: catalog-api
+    spec:
+      containers:
+        - env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_HTTP_PORTS
+              value: "80"
+            - name: ConnectionStrings__Database
+              value: Server=catalogdb;Port=5432;Database=CatalogDb;User Id=postgres;Password=postgres;Include Error Detail=true
+          image: trananhtien/catalogapi:2.0
+          name: catalog-api
+          ports:
+            - containerPort: 80
+              protocol: TCP
+      restartPolicy: Always

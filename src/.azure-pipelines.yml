@@ -1,0 +1,91 @@
+trigger:
+  branches:
+    include:
+      - master # Hoặc branch mà bạn muốn trigger pipeline
+
+# pool:
+#   vmImage: 'windows-latest' # Sử dụng agent Windows cho dự án ASP.NET
+pool:
+  name: 'Default'  # Tên pool mà bạn đã cấu hình
+  demands:
+    - agent.name -equals dotnet-agent
+
+variables:
+  WORKING_DIR: '$(Build.SourcesDirectory)/src'
+  REGISTRY: 'victorvu64.azurecr.io'
+  AKS_NAMESPACE: 'default'
+
+stages:
+- stage: CheckDotnetVersion
+  displayName: "Check .NET version"
+  jobs:
+  - job: CheckVersion
+    steps:
+    - script: |
+        dotnet --version
+      displayName: "Check .NET version"
+
+- stage: Checkout
+  displayName: "Checkout Code"
+  jobs:
+  - job: CheckoutCode
+    steps:
+    - checkout: self # Sử dụng code đã được checkout vào pipeline
+
+# - stage: SonarQubeAnalysis
+#   displayName: "Run SonarQube Analysis"
+#   jobs:
+#   - job: SonarQube
+#     steps:
+#     - task: SonarQubePrepare@7
+#       inputs:
+#         SonarQube: 'SonarQube' # Kết nối SonarQube của bạn (service connection)
+#         cliProjectKey: 'my_asp_project'
+#         cliProjectName: 'aspnet_project'
+#         scannerMode: 'CLI'
+#         cliProjectVersion: '1.0'
+#         configMode: 'manual'
+#     - script: |
+#         dotnet build $(WORKING_DIR)/eshop-microservices.sln
+#       displayName: "Build project for analysis"
+#     - task: SonarQubeAnalyze@7
+#       displayName: 'Run SonarQube Analysis'
+#     - task: SonarQubePublish@7
+#       inputs:
+#         pollingTimeoutSec: '300'
+#       displayName: 'Publish SonarQube Analysis Results'
+
+# - stage: RunDockerCompose
+#   displayName: "Run Docker Compose"
+#   jobs:
+#   - job: DockerCompose
+#     steps:
+#     - script: |
+#         docker-compose -f $(WORKING_DIR)/docker-compose.yml -f $(WORKING_DIR)/docker-compose.override.yml up -d
+#       displayName: "Run Docker Compose"
+
+# - stage: Build
+#   jobs:
+#   - job: BuildAndPush
+#     steps:
+#     - task: UseDotNet@2
+#       inputs:
+#         packageType: 'sdk'
+#         version: '6.x'
+
+#     - script: |
+#         docker-compose -f $(WORKING_DIR)/docker-compose-merged.yml build
+#         docker-compose -f $(WORKING_DIR)/docker-compose-merged.yml push
+#       displayName: 'Build and Push Docker Image'
+
+- stage: Deploy
+  jobs:
+  - job: DeployToAKS
+    steps:
+    - task: KubernetesManifest@1
+      inputs:
+        action: 'deploy'
+        kubernetesServiceConnection: 'aks-connection'
+        namespace: '$(AKS_NAMESPACE)'
+        manifests: '$(WORKING_DIR)/k8s-deployment.yml'
+
