@@ -16,7 +16,7 @@ jobs:
         run: |
           cd C:\Users\Tien\Downloads\run-aspnetcore-microservices
           echo "Running on $(hostname)"
-      
+          dir
       - name: Test a Windows command
         run: |
           echo "Current user: %USERNAME%"
