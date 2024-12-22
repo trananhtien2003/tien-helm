@@ -29,7 +29,7 @@ jobs:
             ${{ runner.os }}-sonar-  
 
       - name: Official SonarQube Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: sonarsource/sonarcloud-github-action@master
         env: 
           SONAR_TOKEN:  915adce8f7e9207ab5bafcef7e37104558d1bdfb
 
