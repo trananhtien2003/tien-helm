@@ -30,12 +30,7 @@ jobs:
 
       - name: Official SonarQube Scan
         uses: sonarsource/sonarcloud-github-action@master
-        with:
-          args: |
-              -Dsonar.projectKey=trananhtien2003_tien-helm
-              -Dsonar.organization=trananhtien2003
-              -Dsonar.host.url=https://sonarcloud.io
-         env:   
+   
           SONAR_TOKEN: ebe0d7918fbd3f4456ce195cf406566497ba99bd
           
       # 2. Login to Docker Hub
