@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-
+          distribution: 'adoptopenjdk'  # Chỉ định phân phối OpenJDK
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@v1
