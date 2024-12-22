@@ -33,6 +33,8 @@ jobs:
         env: 
           SONAR_TOKEN:  915adce8f7e9207ab5bafcef7e37104558d1bdfb
           SONAR_HOST_URL: https://sonarcloud.io/organizations/trananhtien/projects
+          run: sonar-scanner -X
+
       # 2. Login to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
