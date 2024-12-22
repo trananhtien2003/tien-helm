@@ -16,7 +16,25 @@ jobs:
       # 1. Check out the code
       - name: Checkout code
         uses: actions/checkout@v2
-        
+      - name: Read the current count
+      id: read-count
+      run: |
+        if [ -f count.txt ]; then
+          COUNT=$(cat count.txt)
+        else
+          COUNT=0
+        fi
+        echo "CURRENT_COUNT=$COUNT" >> $GITHUB_ENV
+
+    - name: Increment the count
+      run: |
+        NEW_COUNT=$(($CURRENT_COUNT + 1))
+        echo "New count is $NEW_COUNT"
+        echo "NEW_TAG=$NEW_COUNT" >> $GITHUB_ENV
+
+    - name: Save the new count to the file
+      run: |
+        echo $NEW_COUNT > count.txt  
       # 2. Login to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -30,15 +48,15 @@ jobs:
         with:
           context: src  # Đường dẫn đến Dockerfile (thường là thư mục hiện tại)
           push: true  # Đẩy hình ảnh lên Docker Hub
-          tags: trananhtien/yarpapigateway:latest  # Đặt tag cho image
+          tags: trananhtien/yarpapigateway:${{ env.NEW_TAG }}  # Đặt tag cho image
           file: ./src/ApiGateways/YarpApiGateway/Dockerfile
       # Build and Push Image 2
       - name: Build and Push Image 2
         uses: docker/build-push-action@v3
         with:
-          context: src
+          context: src 
           push: true
-          tags: trananhtien/catalog-api:latest
+          tags: trananhtien/catalog-api:${{ env.NEW_TAG }}
           file: ./src/Services/Catalog/Catalog.API/Dockerfile
       # Build and Push Image 3
       - name: Build and Push Image 3
@@ -46,8 +64,8 @@ jobs:
         with:
           context: src
           push: true
-          tags: trananhtien/shoppingweb:latest
-          file: ./src/WebApps/Shopping.Web/Dockerfile
+          tags: trananhtien/shoppingweb:${{ env.NEW_TAG }}
+          file: .\src\WebApps\Shopping.Web\Dockerfile
   update-kubernetes-image:
     runs-on: self-hosted  # Sử dụng self-hosted runner
     needs: build-and-push  # Đảm bảo job này chạy sau khi job build-and-push thành công
