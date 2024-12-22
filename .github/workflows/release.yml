@@ -21,7 +21,7 @@ jobs:
         uses: sonarsource/sonarcloud-github-action@master
         with:
           organization: trananhtien
-          projectKey: trananhtien
+          projectKey: trananhtien2003_tien-helm
         env: 
           SONAR_TOKEN:  915adce8f7e9207ab5bafcef7e37104558d1bdfb
       # 2. Login to Docker Hub
