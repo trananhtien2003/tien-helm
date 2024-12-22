@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest  # Sử dụng Ubuntu runner
     
     steps:
-      # 1. Check out the code
       - name: Checkout code
         uses: actions/checkout@v2
 
