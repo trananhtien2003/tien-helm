@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest  # Sử dụng Ubuntu runner
+    runs-on: self-hosted  # Sử dụng Ubuntu runner
     
     steps:
       # 1. Check out the code
