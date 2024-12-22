@@ -30,7 +30,9 @@ jobs:
 
       - name: Official SonarQube Scan
         uses: sonarsource/sonarcloud-github-action@master
-   
+        with:
+      
+        env:   
           SONAR_TOKEN: ebe0d7918fbd3f4456ce195cf406566497ba99bd
           
       # 2. Login to Docker Hub
