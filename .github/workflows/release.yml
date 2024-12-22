@@ -16,13 +16,10 @@ jobs:
       # 1. Check out the code
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'  # Chỉ định phân phối OpenJDK
+      
       - name: Check Java version
         run: java -version
+
       - name: Cache SonarCloud dependencies
         uses: actions/cache@v3
         with:
@@ -30,10 +27,11 @@ jobs:
           key: ${{ runner.os }}-sonar-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-sonar-  
+
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@v1
         with:
-          organization: trananhtiean
+          organization: trananhtien
           projectKey: trananhtien2003_tien-helm
         env: 
           SONAR_TOKEN:  915adce8f7e9207ab5bafcef7e37104558d1bdfb
