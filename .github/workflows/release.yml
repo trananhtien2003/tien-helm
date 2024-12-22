@@ -16,7 +16,7 @@ jobs:
       # 1. Check out the code
       - name: Checkout code
         uses: actions/checkout@v2
-        
+
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         with:
@@ -37,7 +37,7 @@ jobs:
         with:
           context: src  # Đường dẫn đến Dockerfile (thường là thư mục hiện tại)
           push: true  # Đẩy hình ảnh lên Docker Hub
-          tags: trananhtien/yarpapigateway:latest  # Đặt tag cho image
+          tags: trananhtien/yarpapigateway:lts  # Đặt tag cho image
           file: ./src/ApiGateways/YarpApiGateway/Dockerfile
       # Build and Push Image 2
       - name: Build and Push Image 2
