@@ -16,6 +16,7 @@ jobs:
       # 1. Check out the code
       - name: Checkout code
         uses: actions/checkout@v2
+        
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         with:
