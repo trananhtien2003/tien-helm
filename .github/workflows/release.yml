@@ -16,9 +16,10 @@ jobs:
       # 1. Check out the code
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Read the current count
         id: read-count
-      run: |
+        run: |
         if [ -f count.txt ]; then
           COUNT=$(cat count.txt)
         else
@@ -26,19 +27,19 @@ jobs:
         fi
         echo "CURRENT_COUNT=$COUNT" >> $GITHUB_ENV
 
-    - name: Increment the count
-      run: |
+      - name: Increment the count
+        run: |
         NEW_COUNT=$(($CURRENT_COUNT + 1))
         echo "New count is $NEW_COUNT"
         echo "NEW_TAG=$NEW_COUNT" >> $GITHUB_ENV
 
-    - name: Save the new count to the file
-      run: |
+      - name: Save the new count to the file
+        run: |
         echo $NEW_COUNT > count.txt  
       # 2. Login to Docker Hub
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
+        - name: Log in to Docker Hub
+          uses: docker/login-action@v2
+          with:
           username: trananhtien2003@gmail.com
           password: trananhthinh441
 
