@@ -17,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Read the current count
-      id: read-count
+        id: read-count
       run: |
         if [ -f count.txt ]; then
           COUNT=$(cat count.txt)
