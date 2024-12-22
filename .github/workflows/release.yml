@@ -22,8 +22,8 @@ jobs:
         with:
           organization: trananhtien
           projectKey: trananhtien
-        env: 915adce8f7e9207ab5bafcef7e37104558d1bdfb
-          SONAR_TOKEN:  
+        env: 
+          SONAR_TOKEN:  915adce8f7e9207ab5bafcef7e37104558d1bdfb
       # 2. Login to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
