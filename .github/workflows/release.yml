@@ -21,6 +21,8 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'  # Chỉ định phân phối OpenJDK
+      - name: Check Java version
+        run: java -version
       - name: Cache SonarCloud dependencies
         uses: actions/cache@v3
         with:
