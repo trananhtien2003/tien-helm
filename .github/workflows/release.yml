@@ -23,10 +23,10 @@ jobs:
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         with:
-          projectKey: trananhtien
-          organization: trananhtien
+          projectKey: a123_a123
+          organization: a123123
         env:
-          SONAR_TOKEN: ebe0d7918fbd3f4456ce195cf406566497ba99bd
+          SONAR_TOKEN: c22eb455317e7d817eb8790cd128d36b8319f69d
           SONAR_HOST_URL: https://sonarcloud.io
 
       - name: Cache SonarCloud dependencies
