@@ -21,8 +21,12 @@ jobs:
         run: java -version
 
       - name: Image scan
-        run: |
-          trivy image qu1et/nhom1-backend:latest > trivyimagedeploybackend.txt
+        uses: aquasecurity/trivy-action@v0.3.0
+        with:
+          image-ref: 'qu1et/nhom1-backend:latest'  # Thay thế với image của bạn
+          scan-type: 'image'
+          format: 'json'  # Xuất báo cáo dưới dạng JSON
+          output: 'trivy-report.json'
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         with:
