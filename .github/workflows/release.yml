@@ -25,7 +25,8 @@ jobs:
         with:
           image-ref: 'qu1et/nhom1-backend:latest'  # Thay thế với image của bạn
           scan-type: 'image'
-          format: 'html'  # Xuất báo cáo dưới dạng JSON
+          format: 'template'  # Xuất báo cáo dưới dạng JSON
+          template: 'trivy-html-template.tpl'
           output: 'trivy-report.html'
       - name: Upload HTML Report as Artifact
         uses: actions/upload-artifact@v4
