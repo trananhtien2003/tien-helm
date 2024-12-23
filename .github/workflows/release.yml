@@ -21,12 +21,17 @@ jobs:
         run: java -version
 
       - name: Image scan
-        uses: aquasecurity/trivy-action@v0.3.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'qu1et/nhom1-backend:latest'  # Thay thế với image của bạn
           scan-type: 'image'
-          format: 'json'  # Xuất báo cáo dưới dạng JSON
-          output: 'trivy-report.json'
+          format: 'html'  # Xuất báo cáo dưới dạng JSON
+          output: 'trivy-report.html'
+      - name: Upload HTML Report as Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: trivy-html-report
+          path: trivy-report.html    
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         with:
