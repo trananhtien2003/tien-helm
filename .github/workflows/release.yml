@@ -20,6 +20,9 @@ jobs:
       - name: Check Java version
         run: java -version
 
+      - name: Image scan
+        run: |
+          trivy image qu1et/nhom1-backend:latest > trivyimagedeploybackend.txt
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         with:
