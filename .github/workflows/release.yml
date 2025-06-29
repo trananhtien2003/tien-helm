@@ -17,7 +17,8 @@ jobs:
         run: java -version
       - name: Clear Trivy cache
         run: rm -rf ~/.cache/trivy
-
+      - name: Clear Trivy cache
+        run: rm -rf /home/runner/work/tien-helm/tien-helm/.cache/trivy
       # - name: SonarCloud Scan
       #   uses: sonarsource/sonarcloud-github-action@master
       #   with:
