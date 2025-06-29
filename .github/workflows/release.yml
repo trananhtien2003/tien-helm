@@ -22,7 +22,7 @@ jobs:
           projectKey: a123_a123
           organization: a123123
         env:
-          SONAR_TOKEN: c22eb455317e7d817eb8790cd128d36b8319f69d
+          SONAR_TOKEN: 1a052dc797c9e0f5ca62bc46c61f38c3a3c0d43d
           SONAR_HOST_URL: https://sonarcloud.io
 
       - name: Cache SonarCloud dependencies
