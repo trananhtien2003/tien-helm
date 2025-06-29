@@ -16,59 +16,59 @@ jobs:
       - name: Check Java version
         run: java -version
 
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        with:
-          projectKey: a123_a123
-          organization: a123123
-        env:
-          SONAR_TOKEN: 1a052dc797c9e0f5ca62bc46c61f38c3a3c0d43d
-          SONAR_HOST_URL: https://sonarcloud.io
+      # - name: SonarCloud Scan
+      #   uses: sonarsource/sonarcloud-github-action@master
+      #   with:
+      #     projectKey: a123_a123
+      #     organization: a123123
+      #   env:
+      #     SONAR_TOKEN: 1a052dc797c9e0f5ca62bc46c61f38c3a3c0d43d
+      #     SONAR_HOST_URL: https://sonarcloud.io
 
-      - name: Cache SonarCloud dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-sonar-  
+      # - name: Cache SonarCloud dependencies
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~/.sonar/cache
+      #     key: ${{ runner.os }}-sonar-${{ hashFiles('**/pom.xml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-sonar-  
 
-      # 2. Login to Docker Hub
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: trananhtien2003@gmail.com
-          password: trananhthinh441
+      # # 2. Login to Docker Hub
+      # - name: Log in to Docker Hub
+      #   uses: docker/login-action@v2
+      #   with:
+      #     username: trananhtien2003@gmail.com
+      #     password: trananhthinh441
 
-      # 3. Build and push Docker image
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v3
-        with:
-          context: src  # Đường dẫn đến Dockerfile (thường là thư mục hiện tại)
-          push: true  # Đẩy hình ảnh lên Docker Hub
-          tags: trananhtien/yarpapigateway:lts  # Đặt tag cho image
-          file: ./src/ApiGateways/YarpApiGateway/Dockerfile
-      # Build and Push Image 2
-      - name: Build and Push Image 2
-        uses: docker/build-push-action@v3
-        with:
-          context: src
-          push: true
-          tags: trananhtien/catalog-api:latest
-          file: ./src/Services/Catalog/Catalog.API/Dockerfile
-      # Build and Push Image 3
-      - name: Build and Push Image 3
-        uses: docker/build-push-action@v3
-        with:
-          context: src
-          push: true
-          tags: trananhtien/shoppingweb:latest
-          file: ./src/WebApps/Shopping.Web/Dockerfile
+      # # 3. Build and push Docker image
+      # - name: Build and push Docker image
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     context: src  # Đường dẫn đến Dockerfile (thường là thư mục hiện tại)
+      #     push: true  # Đẩy hình ảnh lên Docker Hub
+      #     tags: trananhtien/yarpapigateway:lts  # Đặt tag cho image
+      #     file: ./src/ApiGateways/YarpApiGateway/Dockerfile
+      # # Build and Push Image 2
+      # - name: Build and Push Image 2
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     context: src
+      #     push: true
+      #     tags: trananhtien/catalog-api:latest
+      #     file: ./src/Services/Catalog/Catalog.API/Dockerfile
+      # # Build and Push Image 3
+      # - name: Build and Push Image 3
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     context: src
+      #     push: true
+      #     tags: trananhtien/shoppingweb:latest
+      #     file: ./src/WebApps/Shopping.Web/Dockerfile
       - name: Trivy FS Scan
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: "fs"
-          scan-ref: ./src/ApiGateways/YarpApiGateway
+          scan-ref: src/ApiGateways/YarpApiGateway
           format: 'template'
           template: "@$HOME/.local/bin/trivy-bin/contrib/html.tpl"
           output: 'fs.html'
