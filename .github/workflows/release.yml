@@ -67,7 +67,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: "fs"
-          scan-ref: .
+          scan-ref: ./src
           format: 'template'
           template: "@$HOME/.local/bin/trivy-bin/contrib/html.tpl"
           output: 'fs.html'
