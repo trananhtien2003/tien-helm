@@ -68,7 +68,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: "fs"
-          scan-ref: src/WebApps/Shopping.Web
+          scan-ref: ./src/ApiGateways/YarpApiGateway/Dockerfile
           format: 'template'
           template: "@$HOME/.local/bin/trivy-bin/contrib/html.tpl"
           output: 'fs.html'
