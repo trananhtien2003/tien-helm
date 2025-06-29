@@ -11,7 +11,7 @@ jobs:
     steps:
       # 1. Check out the code
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       
       - name: Check Java version
         run: java -version
@@ -68,7 +68,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: "fs"
-          scan-ref: ../src/ApiGateways/YarpApiGateway
+          scan-ref: .
           format: 'template'
           template: "@$HOME/.local/bin/trivy-bin/contrib/html.tpl"
           output: 'fs.html'
